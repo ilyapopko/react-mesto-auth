@@ -1,0 +1,11 @@
+.popup__next-image {
+  width: 100%;
+  height: 30px;
+  object-fit: cover;
+}
+
+@media screen and (min-width: 618px) {
+  .popup__next-image {
+    height: 60px;
+  }
+}

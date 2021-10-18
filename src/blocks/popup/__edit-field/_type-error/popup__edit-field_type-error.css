@@ -1,0 +1,4 @@
+.popup__edit-field_type-error {
+  border-bottom: 1px solid #ff0000;
+  margin: 0 0 5px 0;
+}

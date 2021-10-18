@@ -1,0 +1,28 @@
+.profile {
+  font-size: 0;
+  padding: 0 19px;
+  margin-bottom: 36px;
+  display: grid;
+
+  grid-template-areas: "avatar avatar"
+                       "author edit-button"
+                       "specialization specialization"
+                       "add-button add-button";
+
+}
+
+@media screen and (min-width: 618px) {
+  .profile {
+    margin-bottom: 50px;
+    grid-template-areas: "avatar author edit-button add-button"
+                         "avatar specialization specialization add-button";
+    grid-template-columns: 150px auto 1fr 180px;
+    grid-template-rows: auto auto;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .profile {
+    padding: 0;
+  }
+}

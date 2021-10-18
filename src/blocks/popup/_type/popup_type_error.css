@@ -1,0 +1,9 @@
+.popup_type_error {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 130px;
+  display: flex;
+  z-index: 1;
+  justify-content: center;
+}

@@ -1,0 +1,23 @@
+.cards {
+  margin-bottom: 48px;
+  padding: 0 19px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 282px);
+  grid-column-gap: 17px;
+  grid-row-gap: 20px;
+  justify-content: center;
+
+}
+
+@media screen and (min-width: 618px) {
+  .cards {
+    margin-bottom: 66px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .cards {
+    padding: 0;
+  }
+}
+

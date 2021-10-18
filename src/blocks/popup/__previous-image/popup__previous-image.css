@@ -1,0 +1,11 @@
+.popup__previous-image {
+  width: 100%;
+  height: 30px;
+  object-fit: cover;
+}
+
+@media screen and (min-width: 618px) {
+  .popup__previous-image {
+    height: 60px;
+  }
+}

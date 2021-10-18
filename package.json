@@ -1,5 +1,5 @@
 {
-  "name": "mesto-react",
+  "name": "react-mesto-auth",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -44,12 +44,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ilyapopko/mesto-react.git/"
+    "url": "git+https://github.com/ilyapopko/react-mesto-auth.git/"
   },
   "author": "Ilya Popko",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ilyapopko/mesto-react/issues/"
+    "url": "https://github.com/ilyapopko/react-mesto-auth/issues/"
   },
-  "homepage": "https://github.com/mesto-react/#readme"
+  "homepage": "https://github.com/react-mesto-auth/#readme"
 }

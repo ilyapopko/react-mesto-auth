@@ -1,4 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
+
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -11,9 +13,13 @@ import ConfirmDeletePopup from "./ConfirmDeletePopup";
 import ViewAuthorPopup from "./ViewAuthorPopup";
 import ViewLikePopup from "./ViewLikePopup";
 import ErrorPopup from "./ErrorPopup";
-import {apiServer} from "../utils/Api";
-import {CurrentUserContext} from "../contexts/CurrentUserContext";
-
+import InfoTooltip from "./InfoTooltip";
+import Login from './Login';
+import Register from './Register';
+import ProtectedRoute from './ProtectedRoute';
+import { apiServer } from "../utils/Api";
+import { auth } from "../utils/Auth";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -40,19 +46,26 @@ function App() {
   });
 
   const [isErrorPopupOpen, setIsErrorPopupOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState({status: null, message: null, url: null});
+  const [errorMessage, setErrorMessage] = useState({ status: null, message: null, url: null });
 
-  function showError(err) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState(''); //решение временно т.к. одно поле. После реализации бэка будет перенесено в структуру данных пользователя
+  const [isUserInfoOpened, setIsUserInfoOpened] = useState(false);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  const [tooltipMessage, setToolTipMessage] = useState({ message: "", fail: false });
+
+
+  const history = useHistory();
+
+  const showError = (err) => {
     setErrorMessage(err);
     setIsErrorPopupOpen(true);
-    console.log(err);
   }
 
   useEffect(() => {
     apiServer.getUserProperties()
       .then((userData) => {
         setCurrentUser(userData);
-        // setIsLoading(false);
       })
       .catch(err => {
         showError(err);
@@ -72,15 +85,28 @@ function App() {
       });
   }, []);
 
-  function handleEditAvatarClick() {
+  useEffect(() => {
+    handleTokenCheck();
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (isLoggedIn === true) {
+      history.push('/');
+    };
+    // eslint-disable-next-line
+  }, [isLoggedIn]);
+
+
+  const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
   }
 
-  function handleEditProfileClick() {
+  const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
   }
 
-  async function handleUpdateUser(data) {
+  const handleUpdateUser = async (data) => {
     try {
       const updateData = await apiServer.updateUserProperties(data);
       setCurrentUser(updateData);
@@ -90,7 +116,7 @@ function App() {
     }
   }
 
-  async function handleUpdateAvatar(link) {
+  const handleUpdateAvatar = async (link) => {
     try {
       const updateData = await apiServer.updateUserAvatar(link);
       setCurrentUser(updateData);
@@ -100,16 +126,16 @@ function App() {
     }
   }
 
-  function handleAddCardClick() {
+  const handleAddCardClick = () => {
     setIsAddCardPopupOpen(true);
   }
 
-  function handleCardClick(card) {
+  const handleCardClick = (card) => {
     setSelectedCard(card);
     setIsImagePopupOpen(true);
   }
 
-  function toggleLikeCard(card, isLiked, setUpdateCard) {
+  const toggleLikeCard = (card, isLiked, setUpdateCard) => {
     if (isLiked) {
       card.likes = card.likes.filter((user) => user._id !== currentUser._id);
     } else {
@@ -119,7 +145,7 @@ function App() {
     setNeedUpdateViewLike(true);
   }
 
-  async function handleCardLike(card, setUpdateCard) {
+  const handleCardLike = async (card, setUpdateCard) => {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
     //Добавляем/удаляем текущего юзера в массив лайков карточки до получения ответа
     // от сервера для ускорения реакции интерфейса
@@ -133,25 +159,24 @@ function App() {
     }
   }
 
-  function handleCardDelete(card) {
+  const handleCardDelete = (card) => {
     setSelectedCard(card);
     setIsConfirmDeletePopupOpen(true);
   }
 
-  function handleEditCard(card) {
+  const handleEditCard = (card) => {
     setSelectedCard(card);
     setIsAddCardPopupOpen(true);
   }
 
-  async function handleAddCard(data) {
+  const handleAddCard = async (data) => {
     const newCard = await apiServer.addCard(data);
     setCards([newCard, ...cards]);
   }
 
-  //Согласен что это лукавство, но в будущем эту функциональность обязательно реализую на бэке, а сейчас... так сойдет
   //Функция временная, так как у сервера нет методов PATCH или PUT для карточек
   //TODO: Переделать после реализации backend
-  async function handleSaveCard(card, data) {
+  const handleSaveCard = async (card, data) => {
     //Сначала удаляем карточку по алгоритму удаления
     await apiServer.deleteCard(card._id);
     //Дальше добавляем карточку по алгоритму добавления
@@ -160,7 +185,7 @@ function App() {
     setCards((cards) => cards.map((c) => c._id === card._id ? newCard : c));
   }
 
-  async function handleSaveCardSubmit(card, data) {
+  const handleSaveCardSubmit = async (card, data) => {
     try {
       if (!card) {
         await handleAddCard(data);
@@ -173,7 +198,7 @@ function App() {
     }
   }
 
-  async function handleDeleteCardSubmit(card) {
+  const handleDeleteCardSubmit = async (card) => {
     try {
       await apiServer.deleteCard(card._id);
       setCards((cards) => {
@@ -185,7 +210,7 @@ function App() {
     }
   }
 
-  function handleCloseAllPopups() {
+  const handleCloseAllPopups = () => {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddCardPopupOpen(false);
@@ -195,13 +220,15 @@ function App() {
     setIsViewLikePopupOpen(false);
     setNeedUpdateViewLike(false);
     setSelectedCard(null);
+    setIsInfoTooltipOpen(false);
+    setToolTipMessage({ message: "", fail: false })
   }
 
-  function handleCloseErrors() {
+  const handleCloseErrors = () => {
     setIsErrorPopupOpen(false);
   }
 
-  function checkInputValidation(input, setValid, setErrorMessage) {
+  const checkInputValidation = (input, setValid, setErrorMessage) => {
     if (!input.validity.valid) {
       setValid(false);
       setErrorMessage(input.validationMessage);
@@ -210,57 +237,141 @@ function App() {
     }
   }
 
-  function handleHoverCardCaption(card, area) {
+  const handleHoverCardCaption = (card, area) => {
     setSelectedCard(card);
     setPopupOutputArea(area);
     setIsViewAuthorPopupOpen(true);
   }
 
-  function handleOutHover() {
+  const handleOutHover = () => {
     handleCloseAllPopups();
   }
 
-  function handleHoverLikeCard(card, area) {
+  const handleHoverLikeCard = (card, area) => {
     setSelectedCard(card);
     setPopupOutputArea(area);
     setIsViewLikePopupOpen(true);
   }
 
+
+  const handleError = (error) => {
+    console.log(error);
+    setToolTipMessage({ message: "Что-то пошло не так! Попробуйте еще раз.\n " + error.message, fail: true });
+    setIsInfoTooltipOpen(true);
+  }
+
+  const handleResponseAuth = (data) => {
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+      auth.checkToken(data.token)
+        .then((userData) => {
+          //вытащим данные имейла
+          setUserEmail(userData.data.email);
+          setIsLoggedIn(true);
+          setToolTipMessage({ message: "Вы успешно авторизировались!", fail: false });
+          setIsInfoTooltipOpen(true);
+        })
+    } else {
+      setToolTipMessage({ message: "Вы успешно зарегистрировались!", fail: false });
+      setIsInfoTooltipOpen(true);
+      history.push('/sign-in');
+    }
+  };
+
+  const handleLogin = ({ email, password }) => {
+    auth.authorize(email, password)
+      .then(handleResponseAuth)
+      .catch(handleError);
+
+  };
+
+  const handleRegister = ({ email, password }) => {
+    console.log({ email, password });
+    auth.register(email, password)
+      .then(handleResponseAuth)
+      .catch(handleError);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUserEmail('');
+    setIsUserInfoOpened(false);
+    setIsLoggedIn(false);
+    history.push('/sign-in');
+  };
+
+  const handleTokenCheck = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      // проверяем токен пользователя
+      auth.checkToken(token)
+        .then((userData) => {
+          //вытащим данные имейла
+          setUserEmail(userData.data.email);
+          setIsLoggedIn(true);
+        })
+        .catch(handleError);
+    }
+  };
+
   //Ибо тернарный оператор выглядит уродливо
   if (isLoading) {
-    return (<Spinner/>);
+    return (<Spinner />);
   }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page__container">
-        <Header/>
-        <Main cards={cards} card={selectedCard} onEditAvatar={handleEditAvatarClick}
-              onEditProfile={handleEditProfileClick}
-              onAddCard={handleAddCardClick}
-              onClose={handleCloseAllPopups} onCardClick={handleCardClick} onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete} onEditCard={handleEditCard} onHoverCardCaption={handleHoverCardCaption}
-              onHoverLikeCard={handleHoverLikeCard} onOutHover={handleOutHover}/>
-
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={handleCloseAllPopups}
-                         onUpdateAvatar={handleUpdateAvatar} onCheckValidation={checkInputValidation}/>
+          onUpdateAvatar={handleUpdateAvatar} onCheckValidation={checkInputValidation} />
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={handleCloseAllPopups}
-                          onUpdateUser={handleUpdateUser} onCheckValidation={checkInputValidation}/>
+          onUpdateUser={handleUpdateUser} onCheckValidation={checkInputValidation} />
         <AddPlacePopup isOpen={isAddCardPopupOpen} onClose={handleCloseAllPopups} onSaveCard={handleSaveCardSubmit}
-                       onCheckValidation={checkInputValidation} card={selectedCard}/>
+          onCheckValidation={checkInputValidation} card={selectedCard} />
         <ConfirmDeletePopup card={selectedCard} isOpen={isConfirmDeletePopupOpen} onClose={handleCloseAllPopups}
-                            onDeleteCard={handleDeleteCardSubmit}/>
+          onDeleteCard={handleDeleteCardSubmit} />
         <ImagePopup currentCard={selectedCard} setCurrentCard={setSelectedCard} cards={cards} isOpen={isImagePopupOpen}
-                    onClose={handleCloseAllPopups}/>
-
-        <ViewAuthorPopup card={selectedCard} popupOutputArea={popupOutputArea} isOpen={isViewAuthorPopupOpen}/>
-
+          onClose={handleCloseAllPopups} />
+        <ViewAuthorPopup card={selectedCard} popupOutputArea={popupOutputArea} isOpen={isViewAuthorPopupOpen} />
         <ViewLikePopup card={selectedCard} popupOutputArea={popupOutputArea} isOpen={isViewLikePopupOpen}
-                       needUpdateViewLike={needUpdateViewLike}/>
-
-        <ErrorPopup isOpen={isErrorPopupOpen} errorMessage={errorMessage} onClose={handleCloseErrors}/>
-
-        <Footer/>
+          needUpdateViewLike={needUpdateViewLike} />
+        <ErrorPopup isOpen={isErrorPopupOpen} errorMessage={errorMessage} onClose={handleCloseErrors} />
+        <InfoTooltip isOpen={isInfoTooltipOpen} onClose={handleCloseAllPopups} message={tooltipMessage} />
+        <Header
+          isLoggedIn={isLoggedIn}
+          userEmail={userEmail}
+          isUserInfoOpened={isUserInfoOpened}
+          setIsUserInfoOpened={setIsUserInfoOpened}
+          onLogout={handleLogout}
+        />
+        <Switch>
+          <ProtectedRoute exact path="/"
+            isLoggedIn={isLoggedIn}
+            cards={cards} card={selectedCard} component={Main}
+            onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick}
+            onAddCard={handleAddCardClick} onCardClick={handleCardClick} onCardLike={handleCardLike} onCardDelete={handleCardDelete}
+            onEditCard={handleEditCard} onHoverCardCaption={handleHoverCardCaption}
+            onHoverLikeCard={handleHoverLikeCard} onOutHover={handleOutHover}
+          />
+          <Route path="/sign-in">
+            {isLoggedIn ? (
+              <Redirect to="/" />
+            ) : (
+              <Login onSubmit={handleLogin} onCheckValidation={checkInputValidation} />
+            )}
+          </Route>
+          <Route path="/sign-up">
+            {isLoggedIn ? (
+              <Redirect to="/" />
+            ) : (
+              <Register onSubmit={handleRegister} onCheckValidation={checkInputValidation} />
+            )}
+          </Route>
+          <Route path="*">
+            <Redirect to="/" />
+          </Route>
+        </Switch>
+        {isLoggedIn && <Footer />}
       </div>
     </CurrentUserContext.Provider>
   );

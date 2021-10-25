@@ -1,0 +1,14 @@
+.auth-form__input-label {
+  display: block;
+  margin-bottom: 30px;
+}
+
+.auth-form__input-label:last-of-type {
+  margin-bottom: 173px;
+}
+
+@media screen and (min-width: 618px) {
+  .auth-form__input-label:last-of-type {
+    margin-bottom: 216px;
+  }
+}

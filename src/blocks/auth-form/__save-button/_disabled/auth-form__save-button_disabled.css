@@ -1,0 +1,9 @@
+.auth-form__save-button_disabled {
+  background-color: #fff;
+  color: rgba(0, 0, 0, .8);
+  cursor: default;
+}
+
+.auth-form__save-button_disabled:hover {
+  opacity: 1;
+}

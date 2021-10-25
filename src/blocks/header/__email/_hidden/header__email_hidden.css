@@ -1,0 +1,5 @@
+@media screen and (max-width: 617px) {
+  .header__email_hidden {
+    display: none;
+  }
+}

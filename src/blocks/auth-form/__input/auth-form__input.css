@@ -1,0 +1,26 @@
+.auth-form__input {
+  color: #ccc;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 2px solid #ccc;
+  background-color: transparent;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 17px;
+  max-width: 260px;
+}
+
+.auth-form__input:-webkit-autofill {
+  -webkit-text-fill-color: #ccc;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+@media screen and (min-width: 618px) {
+  .auth-form__input {
+    max-width: 358px;
+  }
+}
+

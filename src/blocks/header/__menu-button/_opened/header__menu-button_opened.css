@@ -1,0 +1,6 @@
+.header__menu-button_opened {
+  background-image: url('../../../../images/closeIcon.svg');
+  background-size: cover;
+  width: 35px;
+  height: 35px;
+}

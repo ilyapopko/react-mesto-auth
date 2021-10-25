@@ -1,0 +1,16 @@
+.header__info {
+  font-size: 18px;
+  line-height: 22px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 40px 0;
+  display: flex;
+  gap: 18px;
+}
+
+@media screen and (min-width: 618px) {
+  .header__info {
+    display: none;
+  }
+}

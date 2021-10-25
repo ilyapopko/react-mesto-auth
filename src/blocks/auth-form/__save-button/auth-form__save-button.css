@@ -1,0 +1,32 @@
+.auth-form__save-button {
+  padding: 0;
+  background-color: #fff;
+  color: #000;
+  border: none;
+  border-radius: 2px;
+  font-style: normal;
+  font-weight: normal;
+  box-sizing: border-box;
+  width: 260px;
+  height: 46px;
+  font-size: 16px;
+  line-height: 19px;
+  margin: 0 0 20px 0;
+  transition: opacity .25s ease-in;
+}
+
+.auth-form__save-button:hover {
+  opacity: .8;
+  cursor: pointer;
+  transition: opacity .25s ease-in;
+}
+
+@media screen and (min-width: 618px) {
+  .auth-form__save-button {
+    margin: 0 0 15px 0;
+    width: 358px;
+    height: 50px;
+    font-size: 18px;
+    line-height: 22px;
+  }
+}

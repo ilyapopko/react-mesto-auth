@@ -10,30 +10,30 @@ const Card = ({ card, onCardClick, onCardLike, onCardDelete, onEditCard, onHover
   const isLiked = card.likes.some(i => i._id === currentUser._id);
   const needUpdateCard = useState(false);
 
-  function handleClick() {
+  const handleClick = () => {
     onCardClick(card);
   }
 
-  function handleLikeClick() {
+  const handleLikeClick = () => {
     needUpdateCard[1](false); //обнулим флаг обновления
     onCardLike(card, needUpdateCard[1]);
   }
 
-  function handleDeleteClick() {
+  const handleDeleteClick = () => {
     onCardDelete(card);
   }
 
-  function handleEditClick() {
+  const handleEditClick = () => {
     onEditCard(card);
   }
 
-  function handleSetupImageProperties() {
+  const handleSetupImageProperties = () => {
     if (imageRef.current.naturalWidth < 150) {
       imageRef.current.style.objectFit = 'none';
     }
   }
 
-  function handleShowAuthorInfo(e) {
+  const handleShowAuthorInfo = (e) => {
     const element = captionRef.current;
     onHoverCardCaption(card,
       {
@@ -47,7 +47,7 @@ const Card = ({ card, onCardClick, onCardLike, onCardDelete, onEditCard, onHover
       });
   }
 
-  function handleShowLikeInfo(e) {
+  const handleShowLikeInfo = (e) => {
     const element = likeRef.current;
     onHoverLikeCard(card,
       {
@@ -61,7 +61,7 @@ const Card = ({ card, onCardClick, onCardLike, onCardDelete, onEditCard, onHover
       });
   }
 
-  function handleHideInfo() {
+  const handleHideInfo = () => {
     onOutHover();
   }
 

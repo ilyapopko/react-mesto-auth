@@ -1,0 +1,5 @@
+.popup__tooltip-status_type_fail {
+  background-image: url('../../../../images/status_fail.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+}

@@ -16,7 +16,7 @@
 }
 
 .profile__edit-avatar-button:hover {
-  opacity: 80%;
+  opacity: .8;
   cursor: pointer;
   transition: opacity .4s ease-in;
 }

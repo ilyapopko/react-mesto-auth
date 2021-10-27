@@ -16,7 +16,7 @@
 }
 
 .profile__edit-button:hover {
-  opacity: 60%;
+  opacity: .6;
   cursor: pointer;
   box-shadow: #fff 0 0 15px;
   transition: opacity .25s ease-in;

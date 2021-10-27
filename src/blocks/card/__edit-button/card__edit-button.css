@@ -11,6 +11,6 @@
 }
 
 .card__edit-button:hover {
-  opacity: 60%;
+  opacity: .6;
   transition: opacity .25s ease-in;
 }

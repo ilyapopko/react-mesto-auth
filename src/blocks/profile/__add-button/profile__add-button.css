@@ -14,7 +14,7 @@
 }
 
 .profile__add-button:hover {
-  opacity: 60%;
+  opacity: .6;
   cursor: pointer;
   box-shadow: #fff 0 0 8px;
   transition: opacity .25s ease-in;
